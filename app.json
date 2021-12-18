@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "native-khana-app",
+    "slug": "native-khana-app",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "native-khana-app"
+}
