@@ -6,9 +6,6 @@ const screenHeight=Dimensions.get('window').height
 const styles = StyleSheet.create({
 
     container: {
-        flex: 1,
-    },
-    cover: {
         flex: 1
     },
 
@@ -31,19 +28,29 @@ const styles = StyleSheet.create({
     //card
     cardCover:{
         flex:0.9,
-        borderWidth:2,
+       
+        justifyContent:'center',
+        alignItems:'center'
         // borderColor:'#D0D0D0',
     },
     card:{
         borderWidth:2,
-        width:screenWidth/2,
+        borderColor:'#D0D0D0',
+        borderRadius:10,
+        width:screenWidth/1.2,
         marginLeft:10,
-        marginTop:10
+        marginTop:10,
+        height:300
     },
     qrcode:{
         textAlign:"center",
         fontWeight:'bold',
-        height:150
+        height:120,
+        // borderWidth:2,
+        // borderColor:'red',
+        marginTop:20,
+        marginLeft:10,
+        marginRight:10
     },
     sno:{
     

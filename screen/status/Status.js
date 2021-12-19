@@ -3,7 +3,7 @@ import { View, Text } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient';
 import styles from './style.js'
 
-export default function StatusScreen() {
+export default function StatusScreen({navigation}) {
     return (
         <View style={styles.container}>
             <LinearGradient colors={['#1CB5E0', '#000046']} style={styles.headercover}>

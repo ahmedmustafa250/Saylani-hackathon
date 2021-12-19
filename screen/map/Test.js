@@ -1,16 +1,18 @@
-import React,{useState,useEffect} from 'react'
-import { StyleSheet, Text, View, Dimensions ,Platform,Animated} from 'react-native';
-import MapView,{Marker} from 'react-native-maps';
+import React, { useState, useEffect } from 'react'
+import { StyleSheet, Text, View, Dimensions, Platform, Animated } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import { LinearGradient } from 'expo-linear-gradient';
 import styles from './style.js'
 import AppButton from '../../components/AppButton.js';
+import { getPreciseDistance } from 'geolib';
+
+export default function TrackItem({ navigation }) {
 
 
-export default function TrackItem({navigation}) {
 
-    const positions=[
+    const positions = [
         {
             "branch_name": "Aliabad",
             "latitude": 24.9200172,
@@ -57,12 +59,26 @@ export default function TrackItem({navigation}) {
             "longitude": 67.0724497
         }
     ]
-    
-     const [location, setLocation] = useState(null);
-     const [errorMsg, setErrorMsg] = useState(null);
-     const [isPlaying, setisPlaying] = useState(true);
-   
-     useEffect( async () => {
+
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [isPlaying, setisPlaying] = useState(false);
+
+
+    const calculatePreciseDistance = () => {
+        positions.map((loc) => {
+            let pdis = getPreciseDistance(
+                { latitude: location.latitude, longitude: location.longitude },
+                { latitude: loc.latitude, longitude: loc.longitude },
+            );
+            loc.distance = pdis
+        })
+        positions.sort((a, b) => (a.distance > b.distance ? 1 : -1))
+    };
+
+
+
+    useEffect(async () => {
         if (Platform.OS === 'android' && !Constants.isDevice) {
             setErrorMsg('Oops, this will not work on Snack in an Android emulator. Try it on your device!');
             return;
@@ -75,12 +91,18 @@ export default function TrackItem({navigation}) {
 
         let location = await Location.getCurrentPositionAsync({});
         setLocation({
-            latitude:  location.coords.latitude,
+            latitude: location.coords.latitude,
             longitude: location.coords.longitude,
-            latitudeDelta:  0.0922,
+            latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
         });
-    },[]);
+
+        calculatePreciseDistance()
+        alert("postions sort =>" + JSON.stringify(positions))
+        setisPlaying(true)
+
+
+    }, []);
 
     let text = 'Waiting..';
     if (errorMsg) {
@@ -93,40 +115,55 @@ export default function TrackItem({navigation}) {
     return (
         <View style={styles.container}>
             {
-            location ? 
-            <View style={styles.cover}>
-                {/* //header */}
-                <LinearGradient colors={['#1CB5E0', '#000046']} style={styles.headerCover}>
-                    <Text style={styles.headerText}>Track Location on Map </Text>
-                </LinearGradient>
+                location ?
+                    <View style={styles.cover}>
+                        {/* //header */}
+                        <LinearGradient colors={['#1CB5E0', '#000046']} style={styles.headerCover}>
+                            <Text style={styles.headerText}>Track Location on Map </Text>
+                        </LinearGradient>
 
-                {/* Map */}
-                <View style={styles.mapCover}>
-                    <MapView
-                        style={styles.map}
-                        initialRegion={location}
-                    >
-                        
-                        <Marker
-                            draggable
-                            coordinate={location}
-                            onDragEnd={(e) => setState(e.nativeEvent.coordinate )}
-                            title={"Mustafa's Food"}
-                        />
-                    </MapView>
-                </View>
-                <View style={styles.goButton}>
-                    <AppButton text="Go to Form" navigate={()=> navigation.navigate('Form')} fontSize={18} backgroundColor="#000046" color="white" paddingLeft={80} paddingRight={80} />
-                </View>
-            </View>
-            : 
-            <View style={styles.error}>
-                <Text>{errorMsg}</Text>
-            </View>
-        }
+                        {/* Map */}
+                        <View style={styles.mapCover}>
+                            <MapView
+                                style={styles.map}
+                                initialRegion={location}
+                            >
+                                {
+                                    setisPlaying ?
+                                        positions.map((marker, index) => {
+                                            // alert(index)
+                                            // alert("LOC is"+JSON.stringify(marker))
+                                            <Marker
+                                                coordinate={{
+                                                    // "latitude": 24.9132328,
+                                                    // "longitude": 67.1246195
+                                                    latitude: marker.latitude,
+                                                    longitude: marker.longitude,
+                                                    // latitudeDelta: 0.0922,
+                                                    // longitudeDelta: 0.0421,
+                                                }}
+                                                key={index + 1}
+                                                // onDragEnd={(e) => setState(e.nativeEvent.coordinate)}
+                                                title={marker.branch_name}
+                                            />
+
+                                        })
+                                        : alert("Error")
+                                }
+                            </MapView>
+                        </View>
+                        <View style={styles.goButton}>
+                            <AppButton text="Go to Form" navigate={() => navigation.navigate('Form')} fontSize={18} backgroundColor="#000046" color="white" paddingLeft={80} paddingRight={80} />
+                        </View>
+                    </View>
+                    :
+                    <View style={styles.error}>
+                        <Text>{errorMsg}</Text>
+                    </View>
+            }
         </View>
-        
-  )
+
+    )
 }
 
 

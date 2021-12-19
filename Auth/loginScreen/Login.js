@@ -6,6 +6,7 @@ import AppButton from "../../components/AppButton"
 import Arrow from '../../components/Arrow';
 import styles from './style';
 
+
 export default function Login({ navigation }) {
 
     const [email, setEmail] = useState('');

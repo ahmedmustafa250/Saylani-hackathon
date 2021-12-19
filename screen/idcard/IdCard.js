@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import styles from './style.js'
 import Barcode from '@kichiyaki/react-native-barcode-generator';
 
-export default function StatusScreen() {
+export default function StatusScreen({navigation}) {
     return (
         <View style={styles.container}>
             <LinearGradient colors={['#1CB5E0', '#000046']} style={styles.headercover}>
@@ -12,16 +12,16 @@ export default function StatusScreen() {
             </LinearGradient>
             <View style={styles.cardCover}>
                 <View style={styles.card}>
-                    <View >
+                    <View style={{justifyContent:'center',alignItems:'center'}}>
                     <Text style={styles.qrcode}>
                         <Barcode value='1234565'/>
                     </Text>
                     </View>
-                    <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+                    <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center',marginTop:20}}>
                         <Text style={styles.sno}>SNO :  </Text>
                         <Text style={styles.snoBorder}>168922</Text>
                     </View>
-                    <View>
+                    <View style={{marginTop:30}}>
                         <Text style={styles.authorized}>Authorized Signature</Text>
                         <Text style={{textAlign:"center",marginBottom:10}}>_____________</Text>
                     </View>

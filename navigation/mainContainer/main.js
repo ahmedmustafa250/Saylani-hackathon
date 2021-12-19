@@ -21,7 +21,7 @@ const Stack = createNativeStackNavigator();
 
 export default function main() {
     return (
-        <Stack.Navigator initialRouteName="BranchManager" screenOptions={{headerShown:false}}>
+        <Stack.Navigator initialRouteName="First" screenOptions={{headerShown:false}}>
             <Stack.Screen name="First" component={FirstScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Signup" component={SignupScreen} />
